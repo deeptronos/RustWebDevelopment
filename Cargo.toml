@@ -1,5 +1,5 @@
 [workspace]
 
 members = [ "generate-random-number",
-    "hello-world", # Axum tutorial
+    "hello-world", "include-html", # Axum tutorial
 ]
