@@ -6,7 +6,7 @@
 # Development
 
 ## Run the code once:
-Invoke `cargo run` and visit `http://localhost:3000` in a browser.
+Invoke `cargo run` and visit `http://localhost:3000` in a browser. 
 
 ## Re-run on source change:
 After running `cargo install cargo-watch`, invoke `cargo watch -q -c -w src/ -x run`.
@@ -25,6 +25,8 @@ One of the riddles is from https://www.reddit.com/r/AskReddit/comments/1uddi7/wh
 One of the riddles is from https://www.rd.com/list/challenging-riddles/.
 
 One of the riddles is from https://parade.com/947956/parade/riddles/.
+
+I am not the original author of the image used as the "404" graphic. Unfortunately, I've lost the original source. But, it is not me.
 
 # TODO:
 - Add tracing.
