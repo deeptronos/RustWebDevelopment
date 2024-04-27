@@ -1,15 +1,37 @@
-use axum::{http::{StatusCode, Uri}, response::{Html, IntoResponse}, routing::{delete, get}, serve::Serve, Json, Router};
+mod question;
+mod questionbase;
+mod web;
+use question::*;
+use questionbase::*;
+use web::*;
+
+
+use std::sync::Arc;
+use askama::Template;
+use axum::{
+    http::{StatusCode, Uri}, 
+    response::{Html, IntoResponse, Response}, 
+    extract::{Path, State},
+    routing::{post, get, delete, put}, 
+    serve::Serve, 
+    Json, Router,};
+
 use tower_http::services::ServeDir;
 use std::net::SocketAddr;
+
+use tokio::{self, sync::RwLock};
+
+use serde::{Serialize, Serializer, ser::SerializeStruct, Deserialize};
+extern crate serde_json;
 
 #[tokio::main]
 async fn main() {
     
     let app = Router::new()
-        .route("/create", get(create_handler))
-        .route("/read", get(read_handler))
-        .route("/update", get(update_handler))
-        .route("/delete", get(delete_handler))
+        .route("/create", post(create_handler))           // POST
+        .route("/", get(read_handler))                // GET
+        .route("/update", put(update_handler)) // PUT
+        .route("/delete", delete(delete_handler))         // DELETE
         .nest_service("/assets", ServeDir::new("assets")) // Serve anything requested from /assets
         .fallback(fallback);
 
@@ -25,14 +47,17 @@ async fn main() {
 
 }
 
-// async fn fallback(uri: Uri) -> (StatusCode, ) {
-async fn fallback(uri: Uri) -> (StatusCode, Html<&'static str>) {
+/// Returns a 404 page and NOT_FOUND status code.
+// async fn fallback(uri: Uri) -> (StatusCode, Html<&'static str>) {
+async fn fallback(uri: Uri) -> Response {
     println!("uri: {:#?}",uri );
-    (StatusCode::NOT_FOUND, Html(include_str!("../res/static/404.html")))
+    (StatusCode::NOT_FOUND, Html(include_str!("../res/static/404.html"))).into_response()
     // (StatusCode::NOT_FOUND, format!("No route for {}", uri))
 }
 
-// CRUD:
+
+/// Create a new Question! 
+/// Corresponds to the `POST` method.
 async fn create_handler() -> impl IntoResponse {
     const MESSAGE: &str = "API service - CREATE";
 
@@ -43,6 +68,8 @@ async fn create_handler() -> impl IntoResponse {
     Json(json_response) 
 }
 
+/// Read a random Question!
+/// Corresponds to the `READ` method.
 async fn read_handler() -> impl IntoResponse {
     const MESSAGE: &str = "API service - READ";
 
@@ -53,6 +80,8 @@ async fn read_handler() -> impl IntoResponse {
     Json(json_response)
 }
 
+/// Update a random Question!
+/// Corresponds to the `PUT` method.
 async fn update_handler() -> impl IntoResponse {
     const MESSAGE: &str = "API service - UPDATE";
 
@@ -63,6 +92,7 @@ async fn update_handler() -> impl IntoResponse {
     Json(json_response)
 }
 
+/// Delete a random Post 
 async fn delete_handler() -> impl IntoResponse {
     const MESSAGE: &str = "API service - DELETE";
 
@@ -74,8 +104,3 @@ async fn delete_handler() -> impl IntoResponse {
 }
 
 
-// async fn read_handler() -> Html<&'static str> {
-//     // `std::include_str` macro can be used to include an utf-8 file as `&'static str` in compile
-//     // time. This method is relative to current `main.rs` file.
-//     Html(include_str!("../index.html"))
-// }
