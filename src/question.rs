@@ -1,21 +1,21 @@
 use crate::*;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct Question{
-    pub id : String,
-    pub title : String,
-    pub body : String,
-    pub asker : String,
+pub struct Question {
+    pub id: String,
+    pub title: String,
+    pub body: String,
+    pub asker: String,
 }
 
-impl Question{
+impl Question {
     pub fn new(id: &str, title: &str, body: &str, asker: &str) -> Self {
         let id = id.into();
         let title = title.into();
         let body = body.into();
         let asker = asker.into();
 
-        Self{
+        Self {
             id,
             title,
             body,
