@@ -5,6 +5,8 @@
 
 # Development
 
+Reference `main.rs` to identify the API routes. 
+
 ## Run the code once:
 Invoke `cargo run` and visit `http://localhost:3000` in a browser. 
 
