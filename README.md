@@ -4,10 +4,18 @@
 
 The present code is based on programatik29's `axum-tutorial`([here](https://github.com/programatik29/axum-tutorial/tree/master?tab=readme-ov-file)) which I'm following to familiarize myself with Axum, Tokio, and webdev with Rust. 
 
-## Run the code:
+# Development
+
+## Run the code once:
 Invoke `cargo run` and visit `http://localhost:3000` in a browser.
- 
-## Sources:
+
+## Re-run on source change:
+After running `cargo install cargo-watch`, invoke `cargo watch -q -c -w src/ -x run`.
+
+
+
+
+# Sources:
 
 I used Bart Massey's `Cargo.toml` file from his `knock-knock`project to design my list of dependencies in this `Cargo.toml`.
 

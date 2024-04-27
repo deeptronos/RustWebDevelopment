@@ -8,15 +8,15 @@ edition = "2021"
 [dependencies]
 # askama = { version = "0.12.1", features = ["with-axum"] }
 # askama_axum = "0.4.0"
-#axum = "0.7.5" # TODO reenable.
-axum = "0.5" # For compatibility with axumtut code.
+axum = {version = "0.7.5", features = ["tokio", "http1"]} # TODO reenable.
+# axum = "0.5" # For compatibility with axumtut code.
 # fastrand = "2.0.2"
-# serde = { version = "1.0.197", features = ["derive", "serde_derive"] }
-# serde_json = "1.0.116"
+serde = { version = "1.0.197", features = ["derive", "serde_derive"] }
+serde_json = "1.0.116"
 thiserror = "1.0.58"
 #tokio = { version = "1.37.0", features = ["full"] } # TODO reenable.
 tokio = { version = "1", features = ["full"] } # For compatibility with axumtut code.
-# tower-http = { version = "0.5.2", features = ["trace", "full"] }
+tower-http = { version = "0.5.2", features = ["trace", "full"] }
 # tracing = { version = "0.1.40", features = ["async-await"] }
 # tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 # utoipa = { version = "4.2.0", features = ["axum_extras"] }
