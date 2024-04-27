@@ -2,7 +2,6 @@ mod api;
 mod question;
 mod questionbase;
 mod web;
-use axum::handler;
 use api::*;
 use question::*;
 use questionbase::*;
@@ -11,9 +10,8 @@ use web::*;
 
 use std::fs::File;
 use std::io::{ErrorKind, Seek, Write};
-use std::net::SocketAddr;
 use std::sync::Arc;
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap};
 
 
 use askama::Template;
@@ -22,7 +20,6 @@ use axum::{
     response::{Html, IntoResponse, Response}, 
     extract::{Path, State},
     routing::{post, get, delete, put}, 
-    serve::Serve, 
     Json, Router,};
 
 use tower_http::services::ServeDir;
@@ -53,9 +50,6 @@ async fn main() {
         .route("/", get(handler_index))                
         .route("/index.html", get(handler_index))
         .nest("/api/", apis)
-        // .route("/create", post(create_handler))           // POST
-        // .route("/update", put(update_handler)) // PUT
-        // .route("/delete", delete(delete_handler))         // DELETE
         .nest_service("/assets", ServeDir::new("assets")) // Serve anything requested from /assets
         .fallback(fallback)
         .with_state(questionbase);
@@ -72,60 +66,8 @@ async fn main() {
 
 }
 
-/// Returns a 404 page and NOT_FOUND status code.
-// async fn fallback(uri: Uri) -> (StatusCode, Html<&'static str>) {
+/// Returns a html document representing a 404 page, and NOT_FOUND status code.
 async fn fallback(uri: Uri) -> Response {
     println!("uri: {:#?}",uri );
     (StatusCode::NOT_FOUND, Html(include_str!("../res/static/404.html"))).into_response()
-    // (StatusCode::NOT_FOUND, format!("No route for {}", uri))
 }
-
-
-// /// Create a new Question! 
-// /// Corresponds to the `POST` method.
-// async fn create_handler() -> impl IntoResponse {
-//     const MESSAGE: &str = "API service - CREATE";
-
-//     let json_response = serde_json::json!({
-//         "status" : "OK",
-//         "message" : MESSAGE
-//     });
-//     Json(json_response) 
-// }
-
-// /// Read a random Question!
-// /// Corresponds to the `READ` method.
-// async fn read_handler() -> impl IntoResponse {
-//     const MESSAGE: &str = "API service - READ";
-
-//     let json_response = serde_json::json!({
-//         "status" : "OK",
-//         "message" : MESSAGE
-//     });
-//     Json(json_response)
-// }
-
-// /// Update a random Question!
-// /// Corresponds to the `PUT` method.
-// async fn update_handler() -> impl IntoResponse {
-//     const MESSAGE: &str = "API service - UPDATE";
-
-//     let json_response = serde_json::json!({
-//         "status" : "OK",
-//         "message" : MESSAGE
-//     });
-//     Json(json_response)
-// }
-
-// /// Delete a random Post 
-// async fn delete_handler() -> impl IntoResponse {
-//     const MESSAGE: &str = "API service - DELETE";
-
-//     let json_response = serde_json::json!({
-//         "status" : "OK",
-//         "message" : MESSAGE
-//     });
-//     Json(json_response)
-// }
-
-
