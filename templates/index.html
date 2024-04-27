@@ -3,12 +3,25 @@
     <head>
         <title>Question...</title>
     </head>
+    <style>
+        .fit{
+            text-wrap: wrap;
+        }
+        .italic{
+            font-style: italic;
+        }
+    </style>
     <body>
-        <pre>
-            {{question.asker}} has a question for you all...
-            ---{{question.title}}---
-            
+<pre>
+    <!-- {{question.asker}} has a question for you all... -->
+    ---{{question.title}}---
+</pre>       
+    <pre class="fit">
+        {{question.asker}} asks...
+    </pre
+    ><pre class="fit italic">
             {{question.body}}
-        </pre>
+
+    </pre> 
     </body>
 </html>

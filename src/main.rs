@@ -33,7 +33,7 @@ extern crate serde_json;
 #[tokio::main]
 async fn main() {
     let questionbase = QuestionBase::new("assets/questionbase.json")
-                    .unwrap_or_else(|e|{
+                    .unwrap_or_else(|_e|{
                         std::process::exit(1);
                     });
     let questionbase = Arc::new(RwLock::new(questionbase));
@@ -55,7 +55,7 @@ async fn main() {
         .with_state(questionbase);
 
 
-    let addr = format!("127.0.0.1:3000"); // TODO useless
+    let addr = "127.0.0.1:3000".to_string(); // TODO useless
     let listener = tokio::net::TcpListener::bind(&addr)
                                 .await
                                 .unwrap();

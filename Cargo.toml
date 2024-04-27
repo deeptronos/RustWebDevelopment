@@ -14,7 +14,7 @@ fastrand = "2.0.2"
 serde = { version = "1.0.197", features = ["derive", "serde_derive"] }
 serde_json = "1.0.116"
 thiserror = "1.0.58"
-tokio = { version = "1.37.0", features = ["full"] } # TODO reenable.
+tokio = { version = "1.37.0", features = ["full"] } 
 # tokio = { version = "1", features = ["full"] } # For compatibility with axumtut code.
 tower-http = { version = "0.5.2", features = ["trace", "full"] }
 # tracing = { version = "0.1.40", features = ["async-await"] }
