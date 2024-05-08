@@ -14,6 +14,6 @@ pub async fn handler_index(State(question_base): State<Arc<RwLock<QuestionBase>>
             StatusCode::NOT_FOUND,
             Html(include_str!("../res/static/404.html")),
         )
-            .into_response(), // TODO ok?
+            .into_response(),
     }
 }
