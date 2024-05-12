@@ -35,7 +35,10 @@ I am not the original author of the image used as the "404" graphic. Unfortunate
 
 # TODO:
 
+- Get docker working.
+  - Make networking work!
 - Add web interface for all CRUD.
 - Add comments.
+- PostgresQL DB!
 - Add error handling? // TODO is the current approach sufficient?
 - Add tracing.

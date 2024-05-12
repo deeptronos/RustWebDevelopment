@@ -12,7 +12,7 @@ pub async fn handler_index(State(question_base): State<Arc<RwLock<QuestionBase>>
         Some(question) => (StatusCode::OK, IndexTemplate { question }).into_response(),
         None => (
             StatusCode::NOT_FOUND,
-            Html(include_str!("../res/static/404.html")),
+            Html(include_str!("../assets/static/404.html")),
         )
             .into_response(),
     }

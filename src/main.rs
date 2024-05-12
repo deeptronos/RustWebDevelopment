@@ -45,7 +45,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(handler_index))
-        .route("/index.html", get(handler_index))
+        .route("/assets/templates/index.html", get(handler_index))
         .nest("/api/", apis)
         .nest_service("/assets", ServeDir::new("assets")) // Serve anything requested from /assets
         .fallback(fallback)
@@ -62,7 +62,7 @@ async fn fallback(uri: Uri) -> Response {
     println!("uri: {:#?}", uri);
     (
         StatusCode::NOT_FOUND,
-        Html(include_str!("../res/static/404.html")),
+        Html(include_str!("../assets/static/404.html")),
     )
         .into_response()
 }
