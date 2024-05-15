@@ -1,3 +1,5 @@
+#![warn(clippy::all)]
+
 mod api;
 mod question;
 mod questionbase;
@@ -7,10 +9,14 @@ use question::*;
 use questionbase::*;
 use web::*;
 
+use config::Config;
+
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{ErrorKind, Seek, Write};
 use std::sync::Arc;
+
+use clap::Parser;
 
 use askama::Template;
 use axum::{
@@ -28,8 +34,20 @@ use tokio::{self, sync::RwLock};
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer};
 extern crate serde_json;
 
+#[derive(Parser)]
+#[command(version, about, long_about=None)]
+struct Args {
+    #[clap(short, long, default_value = "0.0.0.0:3000")]
+    serve: String, // IP addr to serve
+}
+
 #[tokio::main]
 async fn main() {
+    let args = Args::parse();
+    startup(args.serve).await
+}
+
+pub async fn startup(ip: String) {
     let questionbase = QuestionBase::new("assets/questionbase.json").unwrap_or_else(|_e| {
         std::process::exit(1);
     });
@@ -51,9 +69,9 @@ async fn main() {
         .fallback(fallback)
         .with_state(questionbase);
 
-    let addr = "127.0.0.1:3000".to_string(); // TODO useless
-    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
-    println!("listening on {}", addr);
+    // let addr = "127.0.0.1:3000".to_string(); // TODO useless
+    let listener = tokio::net::TcpListener::bind(ip.clone()).await.unwrap();
+    println!("listening on {}", ip);
     axum::serve(listener, app).await.unwrap();
 }
 
