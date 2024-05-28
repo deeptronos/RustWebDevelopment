@@ -6,6 +6,10 @@
 
 # Run the Code
 
+**Required:** Ensure a file located at `db/password.txt` exists from the root directory. Write your choice of a database password in this file.
+
+---
+
 Call `docker-compose up` on a freshly-installed pull of this repo to start a PostgreSQL Docker container.
 
 There may be issues with volumes or something... use the following two commands to fix it:
