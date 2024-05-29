@@ -11,7 +11,9 @@ use web::*;
 
 use config::Config;
 
-use std::collections::HashMap;
+// use std::collections::HashMap;
+use std::collections::HashSet;
+use std::error::Error;
 use std::fs::File;
 use std::io::{ErrorKind, Seek, Write};
 use std::sync::Arc;
@@ -34,6 +36,12 @@ use tokio::{self, sync::RwLock};
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer};
 extern crate serde_json;
 
+use sqlx::{
+    self,
+    postgres::{PgPool, PgRow, Postgres},
+    Pool, Row,
+};
+
 #[derive(Parser)]
 #[command(version, about, long_about=None)]
 struct Args {
@@ -48,7 +56,7 @@ async fn main() {
 }
 
 pub async fn startup(ip: String) {
-    let questionbase = QuestionBase::new("assets/questionbase.json").unwrap_or_else(|_e| {
+    let questionbase = QuestionBase::new().await.unwrap_or_else(|_e| {
         std::process::exit(1);
     });
     let questionbase = Arc::new(RwLock::new(questionbase));

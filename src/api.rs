@@ -1,9 +1,13 @@
+// TODO: Find out why none of my migrations/ tables are appearing, and add some example data
+//          (in the style of Bart's example)
+
 // TODO ApiDoc!
 
 use crate::*;
 
 pub async fn questions(State(questionbase): State<Arc<RwLock<QuestionBase>>>) -> Response {
-    questionbase.read().await.into_response()
+    let questions = questionbase.read().await.get_questions().await;
+    (StatusCode::OK, Json(questions)).into_response()
 }
 
 pub async fn question(State(questionbase): State<Arc<RwLock<QuestionBase>>>) -> Response {
