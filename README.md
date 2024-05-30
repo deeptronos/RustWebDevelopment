@@ -12,11 +12,22 @@
 
 Call `docker-compose up --build` on a freshly-installed pull of this repo to start a PostgreSQL Docker container.
 
-There may be issues with volumes or something... use the following two commands to fix it:
+There may be issues with volumes or something... use the following command to fix it:
 
 ```
-$ docker-compose down
 $ docker-compose down --volumes
 ```
 
-This allowed me to run `docker-compose up` successfully again.
+This allowed me to run `docker-compose up --build` successfully again.
+
+---
+
+# Usage:
+
+After Docker is running the servers, a question (in formatted JSON) can be added to the database by `POST`ing to the `<url>/api/question/add/` endpoint.
+
+> See files in `questions/` for examples of the JSON format of a question.
+
+> `add_questions.sh` is a script to add any `.json` file in `questions/` to the database via this endpoint.
+
+View the DB's contents by accessing the `<url>/api/questions` endpoint.
