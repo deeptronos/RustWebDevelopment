@@ -44,7 +44,7 @@ services:
     secrets:
       - db-password
     environment:
-      - POSTGRES_DB=knockknock
+      - POSTGRES_DB=questionsandanswers
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     networks:
       - server-side

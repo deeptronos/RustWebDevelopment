@@ -101,7 +101,7 @@ impl QuestionBase {
         todo!()
     }
     pub async fn get_questions<'a>(&self) -> Result<Vec<Question>, QuestionBaseErr> {
-        let questions = sqlx::query("SELECT * FROM example_questions;")
+        let questions = sqlx::query("SELECT * FROM questions;")
             .fetch_all(&self.0)
             .await?;
         let questions: Vec<Question> = questions.into_iter().map(|q| to_question(q)).collect();
@@ -111,7 +111,7 @@ impl QuestionBase {
     pub async fn add(&mut self, question: Question) -> Result<(), QuestionBaseErr> {
         let mut tx = Pool::begin(&self.0).await?;
         let result = sqlx::query(
-            r#"INSERT INTO example_questions
+            r#"INSERT INTO questions
                 (id, title, body, asker)
                 VALUES ($1, $2, $3, $4);"#,
         )

@@ -10,7 +10,7 @@
 
 ---
 
-Call `docker-compose up` on a freshly-installed pull of this repo to start a PostgreSQL Docker container.
+Call `docker-compose up --build` on a freshly-installed pull of this repo to start a PostgreSQL Docker container.
 
 There may be issues with volumes or something... use the following two commands to fix it:
 
