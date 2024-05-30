@@ -85,6 +85,14 @@ impl QuestionBase {
         Ok(QuestionBase(pool))
     }
 
+    async fn insert_tags(
+        tx: &mut PgConnection,
+        id: &str,
+        tags: &Option<HashSet<String>>,
+    ) -> Result<(), sqlx::Error> {
+        todo!()
+    }
+
     pub fn get_random(&self) -> Option<&Question> {
         todo!()
     }
@@ -100,8 +108,29 @@ impl QuestionBase {
         Ok(questions)
     }
 
-    pub fn add(&mut self, _question: Question) -> Result<(), QuestionBaseErr> {
-        todo!()
+    pub async fn add(&mut self, question: Question) -> Result<(), QuestionBaseErr> {
+        let mut tx = Pool::begin(&self.0).await?;
+        let result = sqlx::query(
+            r#"INSERT INTO example_questions
+                (id, title, body, asker)
+                VALUES ($1, $2, $3, $4);"#,
+        )
+        .bind(&question.id)
+        .bind(&question.title)
+        .bind(&question.body)
+        .bind(&question.asker)
+        .execute(&mut *tx)
+        .await;
+        result.map_err(|e| {
+            if let sqlx::Error::Database(ref dbe) = e {
+                if let Some("23505") = dbe.code().as_deref() {
+                    return QuestionBaseErr::QuestionExists(question.id.to_string());
+                }
+            }
+            QuestionBaseErr::DatabaseError(e.to_string())
+        })?;
+        // Self::insert_tags(&mut tx, &joke.id, &joke.tags).await?;
+        Ok(tx.commit().await?)
     }
 
     pub fn delete(&mut self, _index: &str) -> Result<(), QuestionBaseErr> {

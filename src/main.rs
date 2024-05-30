@@ -38,7 +38,7 @@ extern crate serde_json;
 
 use sqlx::{
     self,
-    postgres::{PgPool, PgRow, Postgres},
+    postgres::{PgConnection, PgPool, PgRow, Postgres},
     Pool, Row,
 };
 

@@ -43,7 +43,7 @@ pub async fn post_handler(
     State(questionbase): State<Arc<RwLock<QuestionBase>>>,
     Json(question): Json<Question>,
 ) -> Response {
-    match questionbase.write().await.add(question) {
+    match questionbase.write().await.add(question).await {
         Ok(()) => StatusCode::CREATED.into_response(),
         Err(e) => QuestionBaseError::response(StatusCode::BAD_REQUEST, e),
     }
