@@ -1,15 +1,13 @@
-// TODO: Find out why none of my migrations/ tables are appearing, and add some example data
-//          (in the style of Bart's example)
-
 // TODO ApiDoc!
 
 use crate::*;
-
+/// Returns a list of all questions in the database.
 pub async fn questions(State(questionbase): State<Arc<RwLock<QuestionBase>>>) -> Response {
     let questions = questionbase.read().await.get_questions().await;
     (StatusCode::OK, Json(questions)).into_response()
 }
 
+/// Returns a random question from the database.
 pub async fn question(State(questionbase): State<Arc<RwLock<QuestionBase>>>) -> Response {
     match questionbase.read().await.get_random().await {
         Ok(question) => question.into_response(),
@@ -17,28 +15,21 @@ pub async fn question(State(questionbase): State<Arc<RwLock<QuestionBase>>>) -> 
     }
 }
 
-// pub async fn get_question(
-//     State(questionbase) : State<Arc<RwLock<QuestionBase>>>,
-//     Path(question_id) : Path<String>,) ->
-//     Response {
-//     match questionbase.read().await.get(&question_id) {
-//         Ok(question) => question.into_response(),
-//         Err(e) => QuestionBaseError::response(StatusCode::NOT_FOUND, e),
-//     }
-// }
-
-// pub async fn get_question(
+// GET request handler for retrieving a specific question by ID
+/// Retrieves a single question from the database based on its unique ID.
 pub async fn get_handler(
     State(questionbase): State<Arc<RwLock<QuestionBase>>>,
     Path(question_id): Path<String>,
 ) -> Response {
+    // Attempt to retrieve the question from the database using its ID
     match questionbase.read().await.get(&question_id) {
         Ok(question) => question.into_response(),
         Err(e) => QuestionBaseError::response(StatusCode::NOT_FOUND, e),
     }
 }
 
-// pub async fn post_question(
+// POST request handler for adding a new question to the database
+/// Adds a new question to the database based on the provided JSON payload.
 pub async fn post_handler(
     State(questionbase): State<Arc<RwLock<QuestionBase>>>,
     Json(question): Json<Question>,
@@ -50,7 +41,7 @@ pub async fn post_handler(
     }
 }
 
-// pub async fn delete_question(
+/// Deletes a question from the database based on its unique ID.
 pub async fn delete_handler(
     State(questionbase): State<Arc<RwLock<QuestionBase>>>,
     Path(question_id): Path<String>,
@@ -61,7 +52,7 @@ pub async fn delete_handler(
     }
 }
 
-// pub async fn update_question(
+/// Updates a question in the database based on its unique ID and JSON payload.
 pub async fn put_handler(
     State(questionbase): State<Arc<RwLock<QuestionBase>>>,
     Path(question_id): Path<String>,
