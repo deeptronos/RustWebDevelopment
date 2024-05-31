@@ -57,17 +57,17 @@ impl QuestionBaseError {
 #[derive(Debug)]
 pub struct QuestionBase(pub Pool<Postgres>);
 
-fn to_question(row: PgRow) -> Question {
-    Question {
-        id: row.get("id"),
-        title: row.get("title"),
-        body: row.get("body"),
-        asker: row.get("asker"),
-        // tags: None, // TODO
-    }
-}
-
 impl QuestionBase {
+    async fn to_question(&self, row: &PgRow) -> Result<Question, sqlx::Error> {
+        Ok(Question {
+            id: row.get("id"),
+            title: row.get("title"),
+            body: row.get("body"),
+            asker: row.get("asker"),
+            // tags: None, // TODO
+        })
+    }
+
     pub async fn new() -> Result<Self, Box<dyn Error>> {
         use std::env::var;
 
@@ -93,18 +93,27 @@ impl QuestionBase {
         todo!()
     }
 
-    pub fn get_random(&self) -> Option<&Question> {
-        todo!()
+    pub async fn get_random(&self) -> Result<Question, QuestionBaseErr> {
+        let row = sqlx::query(r#"SELECT * FROM questions ORDER BY RANDOM () LIMIT 1;"#)
+            .fetch_one(&self.0)
+            .await?;
+
+        let question = self.to_question(&row).await?;
+        Ok(question)
     }
 
     pub fn get<'a>(&'a self, index: &str) -> Result<&'a Question, QuestionBaseErr> {
         todo!()
     }
     pub async fn get_questions<'a>(&self) -> Result<Vec<Question>, QuestionBaseErr> {
-        let questions = sqlx::query("SELECT * FROM questions;")
+        let rows = sqlx::query(r#"SELECT * FROM questions;"#)
             .fetch_all(&self.0)
             .await?;
-        let questions: Vec<Question> = questions.into_iter().map(|q| to_question(q)).collect();
+        let mut questions: Vec<Question> = Vec::with_capacity(rows.len());
+        for q in rows.iter() {
+            questions.push(self.to_question(q).await?);
+        }
+        // let questions: Vec<Question> = questions.into_iter().map(|q| to_question(q)).collect();
         Ok(questions)
     }
 

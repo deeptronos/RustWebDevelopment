@@ -11,9 +11,9 @@ pub async fn questions(State(questionbase): State<Arc<RwLock<QuestionBase>>>) ->
 }
 
 pub async fn question(State(questionbase): State<Arc<RwLock<QuestionBase>>>) -> Response {
-    match questionbase.read().await.get_random() {
-        Some(question) => question.into_response(),
-        None => QuestionBaseError::response(StatusCode::NOT_FOUND, QuestionBaseErr::NoQuestion),
+    match questionbase.read().await.get_random().await {
+        Ok(question) => question.into_response(),
+        Err(e) => QuestionBaseError::response(StatusCode::NOT_FOUND, e),
     }
 }
 
