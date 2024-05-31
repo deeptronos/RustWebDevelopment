@@ -31,3 +31,8 @@ After Docker is running the servers, a question (in formatted JSON) can be added
 > `add_questions.sh` is a script to add any `.json` file in `questions/` to the database via this endpoint.
 
 View the DB's contents by accessing the `<url>/api/questions` endpoint.
+
+# TODO
+
+- Comments
+- Merge into main branch!
