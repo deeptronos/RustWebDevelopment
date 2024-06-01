@@ -22,7 +22,7 @@ pub async fn get_handler(
     Path(question_id): Path<String>,
 ) -> Response {
     // Attempt to retrieve the question from the database using its ID
-    match questionbase.read().await.get(&question_id) {
+    match questionbase.read().await.get(&question_id).await {
         Ok(question) => question.into_response(),
         Err(e) => QuestionBaseError::response(StatusCode::NOT_FOUND, e),
     }
@@ -46,7 +46,7 @@ pub async fn delete_handler(
     State(questionbase): State<Arc<RwLock<QuestionBase>>>,
     Path(question_id): Path<String>,
 ) -> Response {
-    match questionbase.write().await.delete(&question_id) {
+    match questionbase.write().await.delete(&question_id).await {
         Ok(()) => StatusCode::OK.into_response(),
         Err(e) => QuestionBaseError::response(StatusCode::BAD_REQUEST, e),
     }
@@ -58,7 +58,12 @@ pub async fn put_handler(
     Path(question_id): Path<String>,
     Json(question): Json<Question>,
 ) -> Response {
-    match questionbase.write().await.update(&question_id, question) {
+    match questionbase
+        .write()
+        .await
+        .update(&question_id, question)
+        .await
+    {
         Ok(_) => StatusCode::OK.into_response(),
         Err(QuestionBaseErr::QuestionUnprocessable(e)) => QuestionBaseError::response(
             StatusCode::UNPROCESSABLE_ENTITY,

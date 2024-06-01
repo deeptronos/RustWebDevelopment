@@ -3,7 +3,7 @@
 .vscode
 /.idea
 .env
-
+/db
 TESTREST
 
 # Added by cargo
