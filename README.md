@@ -10,7 +10,7 @@
 
 ---
 
-Call `docker-compose up --build` on a freshly-installed pull of this repo to start a PostgreSQL Docker container.
+Call `docker-compose up --build` on a freshly-installed pull of this repo to start 2 Docker containers running the database and Rust web app.
 
 There may be issues with volumes or something... use the following command to fix it:
 
@@ -24,7 +24,11 @@ This allowed me to run `docker-compose up --build` successfully again.
 
 # Usage:
 
-After Docker is running the servers, a question (in formatted JSON) can be added to the database by `POST`ing to the `<url>/api/question/add/` endpoint.
+**After Docker is running the servers...**
+
+A templated webpage containing a random question can be visited by accessing the `<url>/` endpoint.
+
+A question (in formatted JSON) can be added to the database by `POST`ing to the `<url>/api/question/add/` endpoint.
 
 > See files in `questions/` for examples of the JSON format of a question.
 
@@ -35,10 +39,11 @@ View the DB's contents by accessing the `<url>/api/questions` endpoint.
 # TODO
 
 - Comments
-  - `api.rs` ✅
-  - `questionbase.rs` ✅
-  - `main.rs`✅
-  - `question.rs`
-  - `web.rs`
-  - Asses: are we done integrating postgresql? Should we merge and make further changes in main branch, or continue here?
+
+  - `api.rs` ✅ TODO: further doc-ify
+  - `questionbase.rs` ✅ TODO: further doc-ify
+  - `main.rs`✅ TODO: further doc-ify
+  - `question.rs` ✅
+  - `web.rs` ✅
+
 - Merge into main branch!
