@@ -12,16 +12,21 @@
         }
     </style>
     <body>
-<pre>
-    <!-- {{question.asker}} has a question for you all... -->
+        {%- if let Some(question) = question -%}
+        <pre>
     ---{{question.title}}---
-</pre>       
-    <pre class="fit">
+        </pre>       
+        <pre class="fit">
         {{question.asker}} asks...
-    </pre
-    ><pre class="fit italic">
+        </pre>
+        <pre class="fit italic">
             {{question.body}}
 
-    </pre> 
+        </pre> 
+        {%- endif -%}
+
+        {%- if let Some(error) = error -%}
+        <div class="error">{{error}}</div>
+        {%- endif -%}
     </body>
 </html>

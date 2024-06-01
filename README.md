@@ -1,44 +1,44 @@
-# Rust Web Example: _RESTful Axum_
+# Rust Web Example: _PostgreSQL via Docker_
 
 ##### Cole Nemec 2024.
 
 > This is repository for my work in Bart Massey's CS410P taught in Spring '24 at PSU.
 
-# Development
+# Run the Code
 
-Reference `main.rs` to identify the API routes.
-Right now, the application implements `GET`, `POST`, `DELETE`, and `PUT`. These can be interfaced with by making requests to the respective routes defined in main.rs.
+**Required:** Ensure a file located at `db/password.txt` exists from the root directory. Write your choice of a database password in this file.
 
-When the app is running, go to the url to access a random Question.
+---
 
-## Run the code once:
+Call `docker-compose up --build` on a freshly-installed pull of this repo to start a PostgreSQL Docker container.
 
-Invoke `cargo run` and visit `http://localhost:3000` in a browser.
+There may be issues with volumes or something... use the following command to fix it:
 
-## Re-run on source change:
+```
+$ docker-compose down --volumes
+```
 
-After running `cargo install cargo-watch`, invoke `cargo watch -q -c -w src/ -x run`.
+This allowed me to run `docker-compose up --build` successfully again.
 
-# Sources:
+---
 
-I used Bart Massey's `knock-knock` project to design this draft of my question service. His code was referenced as I programmed my own material.
+# Usage:
 
-To better understand REST, I referenced the _What is a RESTful API_ page from the AWS website ([here](https://aws.amazon.com/what-is/restful-api/#:~:text=RESTful%20API%20is%20an%20interface,applications%20to%20perform%20various%20tasks.))
+After Docker is running the servers, a question (in formatted JSON) can be added to the database by `POST`ing to the `<url>/api/question/add/` endpoint.
 
-One of the riddles is from https://www.reddit.com/r/AskReddit/comments/1uddi7/what_are_some_of_the_hardest_riddles_you_know/.
+> See files in `questions/` for examples of the JSON format of a question.
 
-One of the riddles is from https://www.rd.com/list/challenging-riddles/.
+> `add_questions.sh` is a script to add any `.json` file in `questions/` to the database via this endpoint.
 
-One of the riddles is from https://parade.com/947956/parade/riddles/.
+View the DB's contents by accessing the `<url>/api/questions` endpoint.
 
-I am not the original author of the image used as the "404" graphic. Unfortunately, I've lost the original source. But, it is not me.
+# TODO
 
-# TODO:
-
-- Get docker working.
-  - Make networking work!
-- Add web interface for all CRUD.
-- Add comments.
-- PostgresQL DB!
-- Add error handling? // TODO is the current approach sufficient?
-- Add tracing.
+- Comments
+  - `api.rs` ✅
+  - `questionbase.rs` ✅
+  - `main.rs`✅
+  - `question.rs`
+  - `web.rs`
+  - Asses: are we done integrating postgresql? Should we merge and make further changes in main branch, or continue here?
+- Merge into main branch!

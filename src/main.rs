@@ -9,11 +9,11 @@ use question::*;
 use questionbase::*;
 use web::*;
 
-use config::Config;
+// use std::collections::HashMap;
+use std::collections::HashSet;
+use std::error::Error;
 
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::{ErrorKind, Seek, Write};
+use std::io::Write;
 use std::sync::Arc;
 
 use clap::Parser;
@@ -34,11 +34,18 @@ use tokio::{self, sync::RwLock};
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer};
 extern crate serde_json;
 
+use sqlx::{
+    self,
+    postgres::{PgConnection, PgPool, PgRow, Postgres},
+    Pool, Row,
+};
+/// Represents the arguments passed to the program.
 #[derive(Parser)]
-#[command(version, about, long_about=None)]
+#[command(version, about, long_about = None)]
 struct Args {
+    /// The IP address and port to serve the application on. Defaults to 0.0.0.0:3000.
     #[clap(short, long, default_value = "0.0.0.0:3000")]
-    serve: String, // IP addr to serve
+    serve: String,
 }
 
 #[tokio::main]
@@ -47,12 +54,18 @@ async fn main() {
     startup(args.serve).await
 }
 
+/// Starts the web server application.
 pub async fn startup(ip: String) {
-    let questionbase = QuestionBase::new("assets/questionbase.json").unwrap_or_else(|_e| {
+    // Creates a new instance of `QuestionBase`. If an error occurs, it will be logged and the program will exit with a non-zero status code.
+    let questionbase = QuestionBase::new().await.unwrap_or_else(|_e| {
         std::process::exit(1);
     });
+
+    // Creates an `Arc` wrapper around the `RwLock<QuestionBase>`. This allows multiple threads to safely access the data within it concurrently while also allowing ownership transfer.
     let questionbase = Arc::new(RwLock::new(questionbase));
 
+    // Initializes a new router for handling HTTP requests.
+    // It includes routes for getting all questions, a specific question by its ID, adding a new question, deleting a question by its ID, and updating an existing question's details by its ID.
     let apis = Router::new()
         .route("/questions", get(questions))
         .route("/question", get(question))
@@ -61,15 +74,17 @@ pub async fn startup(ip: String) {
         .route("/question/:id", delete(delete_handler))
         .route("/question/:id", put(put_handler));
 
+    // Initializes a new router for the web server application.
+    // It includes routes for the home page and serving static assets from the "assets" directory.
     let app = Router::new()
         .route("/", get(handler_index))
         .route("/assets/templates/index.html", get(handler_index))
         .nest("/api/", apis)
-        .nest_service("/assets", ServeDir::new("assets")) // Serve anything requested from /assets
+        .nest_service("/assets", ServeDir::new("assets")) // Serves anything requested from /assets
         .fallback(fallback)
         .with_state(questionbase);
 
-    // let addr = "127.0.0.1:3000".to_string(); // TODO useless
+    // Binds the server to the specified IP address and starts listening for incoming requests.
     let listener = tokio::net::TcpListener::bind(ip.clone()).await.unwrap();
     println!("listening on {}", ip);
     axum::serve(listener, app).await.unwrap();
