@@ -37,7 +37,7 @@ View the DB's contents by accessing the `<url>/api/questions` endpoint.
 - Comments
   - `api.rs` ✅
   - `questionbase.rs` ✅
-  - `main.rs`
+  - `main.rs`✅
   - `question.rs`
   - `web.rs`
   - Asses: are we done integrating postgresql? Should we merge and make further changes in main branch, or continue here?
