@@ -2,11 +2,13 @@
 
 ##### Cole Nemec 2024.
 
-> This is repository for my work in Bart Massey's CS410P taught in Spring '24 at PSU.
+This is repository for my work in Bart Massey's CS410P taught in Spring '24 at PSU.
 
 # Run the Code
 
-**Required:** Ensure a file located at `db/password.txt` exists from the root directory. Write your choice of a database password in this file.
+## Servers:
+
+**Required:** Ensure a file located at `db/password.txt` exists from the root directory. Write your choice of a database password in this file. In addition, ensure a `.env` file exists to define the variables `BAD_WORDS_API_KEY`, `PASETO_KEY`, and `PORT`.
 
 ---
 
@@ -19,6 +21,17 @@ $ docker-compose down --volumes
 ```
 
 This allowed me to run `docker-compose up --build` successfully again.
+
+## Front end:
+
+After this repository is cloned, navigate to the base of the repo directory and run the following commands to pull the front end submodule code into `questionbase-yew`:
+
+```zsh
+git submodule init
+git submodule update
+```
+
+Then, navigate to `questionbase-yew` and run `trunk serve --open` to start the front end and open it in your browser.
 
 ---
 
@@ -35,16 +48,3 @@ A question (in formatted JSON) can be added to the database by `POST`ing to the 
 > `add_questions.sh` is a script to add any `.json` file in `questions/` to the database via this endpoint.
 
 View the DB's contents by accessing the `<url>/api/questions` endpoint.
-
-# TODO
-
-- Comments
-
-  - `api.rs` ✅ TODO: further doc-ify
-  - `questionbase.rs` ✅ TODO: further doc-ify
-  - `main.rs`✅ TODO: further doc-ify
-  - `question.rs` ✅
-  - `web.rs` ✅
-
-- SwaggerUI?
-- User Auth/0Ath/2FA
