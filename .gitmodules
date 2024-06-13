@@ -1,0 +1,3 @@
+[submodule "questionbase-yew"]
+	path = questionbase-yew
+	url = https://github.com/deeptronos/questionbase-yew.git
