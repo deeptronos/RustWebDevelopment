@@ -21,13 +21,13 @@ use clap::Parser;
 use askama::Template;
 use axum::{
     extract::{Path, State},
-    http::{StatusCode, Uri},
+    http::{request::Parts, Method, StatusCode, Uri},
     response::{Html, IntoResponse, Response},
     routing::{delete, get, post, put},
     Json, Router,
 };
 
-use tower_http::services::ServeDir;
+use tower_http::{cors, services::ServeDir};
 
 use tokio::{self, sync::RwLock};
 
@@ -64,6 +64,10 @@ pub async fn startup(ip: String) {
     // Creates an `Arc` wrapper around the `RwLock<QuestionBase>`. This allows multiple threads to safely access the data within it concurrently while also allowing ownership transfer.
     let questionbase = Arc::new(RwLock::new(questionbase));
 
+    let cors = cors::CorsLayer::new()
+        .allow_methods([Method::GET])
+        .allow_origin(cors::Any);
+
     // Initializes a new router for handling HTTP requests.
     // It includes routes for getting all questions, a specific question by its ID, adding a new question, deleting a question by its ID, and updating an existing question's details by its ID.
     let apis = Router::new()
@@ -82,6 +86,7 @@ pub async fn startup(ip: String) {
         .nest("/api/", apis)
         .nest_service("/assets", ServeDir::new("assets")) // Serves anything requested from /assets
         .fallback(fallback)
+        .layer(cors)
         .with_state(questionbase);
 
     // Binds the server to the specified IP address and starts listening for incoming requests.
@@ -92,7 +97,7 @@ pub async fn startup(ip: String) {
 
 /// Returns a html document representing a 404 page, and NOT_FOUND status code.
 async fn fallback(uri: Uri) -> Response {
-    println!("uri: {:#?}", uri);
+    println!("CTEST - fallback, uri: {:#?}", uri);
     (
         StatusCode::NOT_FOUND,
         Html(include_str!("../assets/static/404.html")),

@@ -52,3 +52,4 @@ fastrand = "2.0.2"
 utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
 
 config = { version = "0.13.1", features = ["toml"] }
+# questionbase-yew = { path = "libs/questionbase-yew" }
